@@ -11,6 +11,6 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0"/>
   </ItemGroup>
   <ItemGroup>
-      <ProjectReference Include="..\..\src\CheckoutSDK.Extensions.Microsoft\CheckoutSDK.Extensions.Microsoft.csproj" />
+      <ProjectReference Include="..\..\src\CheckoutSdk.Extensions.Microsoft\CheckoutSdk.Extensions.Microsoft.csproj" />
   </ItemGroup>
 </Project>
