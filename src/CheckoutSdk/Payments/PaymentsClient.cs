@@ -28,10 +28,10 @@ namespace Checkout.Payments
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<PaymentResponse> RequestAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken)) 
+        public Task<PaymentResponse> RequestAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null) 
             where TRequestSource : IRequestSource
         {
-            return RequestPaymentAsync(paymentRequest, PaymentResponseMappings, cancellationToken);
+            return RequestPaymentAsync(paymentRequest, PaymentResponseMappings, cancellationToken, idempotencyKey: idempotencyKey);
         }
 
         public Task<GetPaymentResponse> GetAsync(string paymentId, CancellationToken cancellationToken = default(CancellationToken))
@@ -45,28 +45,28 @@ namespace Checkout.Payments
             return _apiClient.GetAsync<IEnumerable<PaymentAction>>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken);
         }
 
-        public Task<CaptureResponse> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CaptureResponse> CaptureAsync(string paymentId, CaptureRequest captureRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/captures";
-            return _apiClient.PostAsync<CaptureResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, captureRequest);
+            return _apiClient.PostAsync<CaptureResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, captureRequest, idempotencyKey: idempotencyKey);
         }
 
-        public Task<RefundResponse> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<RefundResponse> RefundAsync(string paymentId, RefundRequest refundRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/refunds";
-            return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, refundRequest);
+            return _apiClient.PostAsync<RefundResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, refundRequest, idempotencyKey: idempotencyKey);
         }
 
-        public Task<VoidResponse> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<VoidResponse> VoidAsync(string paymentId, VoidRequest voidRequest = null, CancellationToken cancellationToken = default(CancellationToken), string idempotencyKey = null)
         {
             const string path = "/voids";
-            return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, voidRequest);
+            return _apiClient.PostAsync<VoidResponse>(GetPaymentUrl(paymentId) + path, _credentials, cancellationToken, voidRequest, idempotencyKey: idempotencyKey);
         }
 
-        private async Task<PaymentResponse> RequestPaymentAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IRequestSource
+        private async Task<PaymentResponse> RequestPaymentAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken, string idempotencyKey = null) where TRequestSource : IRequestSource
         {
             const string path = "payments";
-            var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, paymentRequest);
+            var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, paymentRequest, idempotencyKey: idempotencyKey);
             return apiResponse;
         }
 

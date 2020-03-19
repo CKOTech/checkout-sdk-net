@@ -40,7 +40,7 @@ namespace Checkout.SampleApp.Tests
             };
             _paymentsClient = new Mock<IPaymentsClient>();
             _paymentsClient.Setup(p =>
-                    p.RequestAsync(It.IsAny<PaymentRequest<TokenSource>>(), default(CancellationToken)))
+                    p.RequestAsync(It.IsAny<PaymentRequest<TokenSource>>(), default(CancellationToken), null))
                 .ReturnsAsync(() => _paymentsResponse);
             _paymentsClient.Setup(p =>
                 p.GetAsync(It.IsAny<string>(), default(CancellationToken)))
