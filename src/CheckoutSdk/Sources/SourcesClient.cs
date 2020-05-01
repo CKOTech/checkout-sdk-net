@@ -35,7 +35,7 @@ namespace Checkout.Sources
         private async Task<SourceResponse> RequestSourceAsync(SourceRequest sourceRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken = default(CancellationToken))
         {
             const string path = "sources";
-            var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, sourceRequest);
+            var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, sourceRequest).NotOnCapturedContext();
             return apiResponse;
         }
     }

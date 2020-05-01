@@ -76,9 +76,9 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, cancellationToken))
+            using (var httpResponse = await SendRequestAsync(HttpMethod.Get, path, credentials, null, cancellationToken).NotOnCapturedContext())
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await DeserializeJsonAsync<TResult>(httpResponse).NotOnCapturedContext();
             }
         }
 
@@ -87,9 +87,9 @@ namespace Checkout
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken).NotOnCapturedContext())
             {
-                return await DeserializeJsonAsync<TResult>(httpResponse);
+                return await DeserializeJsonAsync<TResult>(httpResponse).NotOnCapturedContext();
             }
         }
 
@@ -99,18 +99,18 @@ namespace Checkout
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
             if (resultTypeMappings == null) throw new ArgumentNullException(nameof(resultTypeMappings));
 
-            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken))
+            using (var httpResponse = await SendRequestAsync(HttpMethod.Post, path, credentials, request, cancellationToken).NotOnCapturedContext())
             {
                 if (!resultTypeMappings.TryGetValue(httpResponse.StatusCode, out Type resultType))
                     throw new KeyNotFoundException($"The status code {httpResponse.StatusCode} is not mapped to a result type");
 
-                return await DeserializeJsonAsync(httpResponse, resultType);
+                return await DeserializeJsonAsync(httpResponse, resultType).NotOnCapturedContext();
             }
         }
 
         private async Task<TResult> DeserializeJsonAsync<TResult>(HttpResponseMessage httpResponse)
         {
-            var result = await DeserializeJsonAsync(httpResponse, typeof(TResult));
+            var result = await DeserializeJsonAsync(httpResponse, typeof(TResult)).NotOnCapturedContext();
             return (TResult)result;
         }
 
@@ -119,7 +119,7 @@ namespace Checkout
             if (httpResponse.Content == null)
                 return null;
 
-            var json = await httpResponse.Content.ReadAsStringAsync();
+            var json = await httpResponse.Content.ReadAsStringAsync().NotOnCapturedContext();
             return _serializer.Deserialize(json, resultType);
         }
 
@@ -131,7 +131,7 @@ namespace Checkout
             var httpRequest = new HttpRequestMessage(httpMethod, GetRequestUri(path));
             httpRequest.Headers.UserAgent.ParseAdd("checkout-sdk-net/" + ReflectionUtils.GetAssemblyVersion<ApiClient>());
 
-            await credentials.AuthorizeAsync(httpRequest);
+            await credentials.AuthorizeAsync(httpRequest).NotOnCapturedContext();
 
             if (request != null)
             {
@@ -140,8 +140,8 @@ namespace Checkout
 
             Logger.Info("{HttpMethod} {Uri}", httpMethod, httpRequest.RequestUri.AbsoluteUri);
 
-            var httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken);
-            await ValidateResponseAsync(httpResponse);
+            var httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken).NotOnCapturedContext();
+            await ValidateResponseAsync(httpResponse).NotOnCapturedContext();
 
             return httpResponse;
         }
@@ -156,7 +156,7 @@ namespace Checkout
 
                 if (httpResponse.StatusCode == Unprocessable)
                 {
-                    var error = await DeserializeJsonAsync<ErrorResponse>(httpResponse);
+                    var error = await DeserializeJsonAsync<ErrorResponse>(httpResponse).NotOnCapturedContext();
                     throw new CheckoutValidationException(error, httpResponse.StatusCode, requestId);
                 }
 
