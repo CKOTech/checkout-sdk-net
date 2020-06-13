@@ -65,7 +65,7 @@ namespace Checkout.Payments
 
         private async Task<PaymentResponse> RequestPaymentAsync<TRequestSource>(PaymentRequest<TRequestSource> paymentRequest, Dictionary<HttpStatusCode, Type> resultTypeMappings, CancellationToken cancellationToken) where TRequestSource : IRequestSource
         {
-            const string path = "payments";
+            const string path = "/payments";
             var apiResponse = await _apiClient.PostAsync(path, _credentials, resultTypeMappings, cancellationToken, paymentRequest);
             return apiResponse;
         }

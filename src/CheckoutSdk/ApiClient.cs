@@ -221,7 +221,7 @@ namespace Checkout
         private Uri GetRequestUri(string path)
         {
             var baseUri = new Uri(_configuration.Uri);
-            Uri.TryCreate(baseUri, path, out var uri);
+            Uri.TryCreate(baseUri, "." + path, out var uri);
 
             return uri;
         }
