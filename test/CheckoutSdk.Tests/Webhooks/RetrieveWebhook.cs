@@ -16,12 +16,12 @@ namespace Checkout.Tests.Webhooks
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
-            var webhookRetrievalResponse = await Api.Webhooks.RetrieveWebhook(webhookRegistrationResponse.Id);
+            var webhookRetrievalResponse = await Api.Webhooks.RetrieveWebhook(webhookRegistrationResponse.Content.Id);
 
             webhookRetrievalResponse.ShouldNotBeNull();
-            webhookRetrievalResponse.Id.ShouldBe(webhookRegistrationResponse.Id);
+            webhookRetrievalResponse.Content.Id.ShouldBe(webhookRegistrationResponse.Content.Id);
 
-            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Content.Id);
         }
     }
 }

@@ -57,6 +57,7 @@
 
   <ItemGroup Label="Package References">
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup Label=".NET Standard Packages" Condition="'$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard2.0'">

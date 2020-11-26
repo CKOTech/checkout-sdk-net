@@ -25,7 +25,7 @@ namespace Checkout.Tests.Sources
             var sourceResponse = await _api.Sources.AddAPaymentSource(sourceRequest);
 
             sourceResponse.ShouldNotBeNull();
-            var source = sourceResponse.Source;
+            var source = sourceResponse.Content.Source;
             source.Customer.ShouldBeOfType<CustomerResponse>();
             source.Id.ShouldNotBeNullOrEmpty();
             source.Links.ShouldBeOfType<Dictionary<string, Link>>();

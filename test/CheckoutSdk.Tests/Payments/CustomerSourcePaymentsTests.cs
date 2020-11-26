@@ -32,24 +32,24 @@ namespace Checkout.Tests.Payments
                 Capture = false,
             };
 
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(customerPaymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(customerPaymentRequest);
 
-            paymentResponse.Payment.ShouldNotBeNull();
-            paymentResponse.Payment.Approved.ShouldBeTrue();
-            paymentResponse.Payment.Id.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.Id.ShouldNotBe(firstCardPaymentResponse.Payment.Id);
-            paymentResponse.Payment.ActionId.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.Amount.ShouldBe(customerPaymentRequest.Amount.Value);
-            paymentResponse.Payment.Currency.ShouldBe(customerPaymentRequest.Currency);
-            paymentResponse.Payment.Reference.ShouldBe(customerPaymentRequest.Reference);
-            paymentResponse.Payment.Customer.ShouldNotBeNull();
-            paymentResponse.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Payment?.Customer?.Id);
-            paymentResponse.Payment.Source.AsCard().ShouldNotBeNull();
-            paymentResponse.Payment.Source.AsCard().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCard().Id);
-            paymentResponse.Payment.CanCapture().ShouldBeTrue();
-            paymentResponse.Payment.CanVoid().ShouldBeTrue();
+            paymentResponse.Content.Payment.ShouldNotBeNull();
+            paymentResponse.Content.Payment.Approved.ShouldBeTrue();
+            paymentResponse.Content.Payment.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.Id.ShouldNotBe(firstCardPaymentResponse.Content.Payment.Id);
+            paymentResponse.Content.Payment.ActionId.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.Amount.ShouldBe(customerPaymentRequest.Amount.Value);
+            paymentResponse.Content.Payment.Currency.ShouldBe(customerPaymentRequest.Currency);
+            paymentResponse.Content.Payment.Reference.ShouldBe(customerPaymentRequest.Reference);
+            paymentResponse.Content.Payment.Customer.ShouldNotBeNull();
+            paymentResponse.Content.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Content.Payment?.Customer?.Id);
+            paymentResponse.Content.Payment.Source.AsCard().ShouldNotBeNull();
+            paymentResponse.Content.Payment.Source.AsCard().Id.ShouldBe(firstCardPaymentResponse.Content.Payment?.Source?.AsCard().Id);
+            paymentResponse.Content.Payment.CanCapture().ShouldBeTrue();
+            paymentResponse.Content.Payment.CanVoid().ShouldBeTrue();
         }
     }
 }

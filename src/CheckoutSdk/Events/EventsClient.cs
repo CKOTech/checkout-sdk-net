@@ -1,5 +1,7 @@
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,29 +24,29 @@ namespace Checkout.Events
             _credentials = new SecretKeyCredentials(configuration);
         }
 
-        public Task<AvailableEventTypesResponse> RetrieveEventTypes(CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<AvailableEventTypesResponse>> RetrieveEventTypes(CancellationToken cancellationToken = default(CancellationToken))
         {            
             return _apiClient.GetAsync<AvailableEventTypesResponse>("event-types", _credentials, cancellationToken);
         }
 
-        public Task<EventResponse> RetrieveEvent(string eventId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<EventResponse>> RetrieveEvent(string eventId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.GetAsync<EventResponse>($"{path}/{eventId}", _credentials, cancellationToken);
         }
 
-        public Task<EventNotificationResponse> RetrieveEventNotification(string eventId, string notificationId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<EventNotificationResponse>> RetrieveEventNotification(string eventId, string notificationId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return _apiClient.GetAsync<EventNotificationResponse>($"{path}/{eventId}/notifications/{notificationId}", _credentials, cancellationToken);
         }
 
-        public Task<HttpResponseMessage> RetryAllWebhooks(string eventId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<dynamic>> RetryAllWebhooks(string eventId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{eventId}/webhooks/retry", _credentials, cancellationToken, null);
+            return _apiClient.PostAsync<dynamic>($"{path}/{eventId}/webhooks/retry", _credentials, cancellationToken, null);
         }
 
-        public Task<HttpResponseMessage> RetryWebhook(string eventId, string webhookId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<dynamic>> RetryWebhook(string eventId, string webhookId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _apiClient.PostAsync<HttpResponseMessage>($"{path}/{eventId}/webhooks/{webhookId}/retry", _credentials, cancellationToken, null);
+            return _apiClient.PostAsync<dynamic>($"{path}/{eventId}/webhooks/{webhookId}/retry", _credentials, cancellationToken, null);
         }
     }
 }

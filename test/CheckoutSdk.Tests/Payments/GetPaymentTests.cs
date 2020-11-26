@@ -25,27 +25,27 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.PaymentType = PaymentType.Recurring;
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Content.Payment.Id);
 
             paymentDetails.ShouldNotBeNull();
-            paymentDetails.Id.ShouldBe(paymentResponse.Payment.Id);
-            paymentDetails.Customer.ShouldNotBeNull();
-            paymentDetails.Customer.Id.ShouldBe(paymentResponse.Payment.Customer.Id);
-            paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
-            paymentDetails.Amount.ShouldBe(paymentResponse.Payment.Amount);
-            paymentDetails.Currency.ShouldBe(paymentResponse.Payment.Currency);
-            paymentDetails.PaymentType.ShouldBe(paymentRequest.PaymentType);
-            paymentDetails.BillingDescriptor.ShouldNotBeNull();
-            paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
-            paymentDetails.Risk.ShouldNotBeNull();
-            paymentDetails.RequestedOn.ShouldBeGreaterThan(paymentResponse.Payment.ProcessedOn.AddMinutes(-1));
-            paymentDetails.ThreeDS.ShouldBeNull();
-            paymentDetails.Links.ShouldNotBeNull();
-            paymentDetails.Links.ShouldNotBeEmpty();
-            paymentDetails.Status.ShouldBe(PaymentStatus.Authorized);
-            paymentDetails.Source.AsCard().ShouldNotBeNull();
-            paymentDetails.Approved.ShouldBeTrue();
+            paymentDetails.Content.Id.ShouldBe(paymentResponse.Content.Payment.Id);
+            paymentDetails.Content.Customer.ShouldNotBeNull();
+            paymentDetails.Content.Customer.Id.ShouldBe(paymentResponse.Content.Payment.Customer.Id);
+            paymentDetails.Content.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
+            paymentDetails.Content.Amount.ShouldBe(paymentResponse.Content.Payment.Amount);
+            paymentDetails.Content.Currency.ShouldBe(paymentResponse.Content.Payment.Currency);
+            paymentDetails.Content.PaymentType.ShouldBe(paymentRequest.PaymentType);
+            paymentDetails.Content.BillingDescriptor.ShouldNotBeNull();
+            paymentDetails.Content.Reference.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Content.Risk.ShouldNotBeNull();
+            paymentDetails.Content.RequestedOn.ShouldBeGreaterThan(paymentResponse.Content.Payment.ProcessedOn.AddMinutes(-1));
+            paymentDetails.Content.ThreeDS.ShouldBeNull();
+            paymentDetails.Content.Links.ShouldNotBeNull();
+            paymentDetails.Content.Links.ShouldNotBeEmpty();
+            paymentDetails.Content.Status.ShouldBe(PaymentStatus.Authorized);
+            paymentDetails.Content.Source.AsCard().ShouldNotBeNull();
+            paymentDetails.Content.Approved.ShouldBeTrue();
         }
 
         [Fact]
@@ -53,32 +53,32 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.ThreeDS = true;
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.IsPending.ShouldBe(true);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            paymentResponse.Content.IsPending.ShouldBe(true);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Pending.Id);
+            var paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Content.Pending.Id);
 
             paymentDetails.ShouldNotBeNull();
-            paymentDetails.Id.ShouldBe(paymentResponse.Pending.Id);
-            paymentDetails.Customer.ShouldNotBeNull();
-            paymentDetails.Customer.Id.ShouldBe(paymentResponse.Pending.Customer.Id);
-            paymentDetails.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
-            paymentDetails.Amount.ShouldBe(paymentRequest.Amount);
-            paymentDetails.Currency.ShouldBe(paymentRequest.Currency);
-            paymentDetails.Reference.ShouldNotBeNullOrWhiteSpace();
-            paymentDetails.PaymentType.ShouldBe(PaymentType.Regular);
-            paymentDetails.Risk.ShouldNotBeNull();
-            paymentDetails.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
-            paymentDetails.ThreeDS.ShouldNotBeNull();
-            paymentDetails.ThreeDS.Downgraded.ShouldBe(false);
-            paymentDetails.ThreeDS.Enrolled.ShouldNotBeNullOrEmpty();
-            paymentDetails.RequiresRedirect().ShouldBe(true);
-            paymentDetails.GetRedirectLink().ShouldNotBeNull();
-            paymentDetails.Links.ShouldNotBeNull();
-            paymentDetails.Links.ShouldNotBeEmpty();
-            paymentDetails.Status.ShouldBe(PaymentStatus.Pending);
-            paymentDetails.Source.AsCard().ShouldNotBeNull();
-            paymentDetails.Approved.ShouldBeFalse();
+            paymentDetails.Content.Id.ShouldBe(paymentResponse.Content.Pending.Id);
+            paymentDetails.Content.Customer.ShouldNotBeNull();
+            paymentDetails.Content.Customer.Id.ShouldBe(paymentResponse.Content.Pending.Customer.Id);
+            paymentDetails.Content.Customer.Email.ShouldBe(paymentRequest.Customer.Email);
+            paymentDetails.Content.Amount.ShouldBe(paymentRequest.Amount);
+            paymentDetails.Content.Currency.ShouldBe(paymentRequest.Currency);
+            paymentDetails.Content.Reference.ShouldNotBeNullOrWhiteSpace();
+            paymentDetails.Content.PaymentType.ShouldBe(PaymentType.Regular);
+            paymentDetails.Content.Risk.ShouldNotBeNull();
+            paymentDetails.Content.RequestedOn.ShouldBeGreaterThan(DateTime.MinValue);
+            paymentDetails.Content.ThreeDS.ShouldNotBeNull();
+            paymentDetails.Content.ThreeDS.Downgraded.ShouldBe(false);
+            paymentDetails.Content.ThreeDS.Enrolled.ShouldNotBeNullOrEmpty();
+            paymentDetails.Content.RequiresRedirect().ShouldBe(true);
+            paymentDetails.Content.GetRedirectLink().ShouldNotBeNull();
+            paymentDetails.Content.Links.ShouldNotBeNull();
+            paymentDetails.Content.Links.ShouldNotBeEmpty();
+            paymentDetails.Content.Status.ShouldBe(PaymentStatus.Pending);
+            paymentDetails.Content.Source.AsCard().ShouldNotBeNull();
+            paymentDetails.Content.Approved.ShouldBeFalse();
         }
 
         [Fact]
@@ -87,14 +87,14 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             var metadata = new KeyValuePair<string, object>("test", "1234");
             paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
+            var paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Content.Payment.Id);
 
-            paymentDetails.Metadata.ShouldNotBeNull();
-            paymentDetails.Metadata.ShouldNotBeEmpty();
-            paymentDetails.Metadata.ShouldHaveSingleItem();
-            paymentDetails.Metadata.ShouldContain(d => d.Key == metadata.Key && d.Value.Equals(metadata.Value));
+            paymentDetails.Content.Metadata.ShouldNotBeNull();
+            paymentDetails.Content.Metadata.ShouldNotBeEmpty();
+            paymentDetails.Content.Metadata.ShouldHaveSingleItem();
+            paymentDetails.Content.Metadata.ShouldContain(d => d.Key == metadata.Key && d.Value.Equals(metadata.Value));
         }
 
         [Fact]
@@ -102,11 +102,11 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.PaymentIp = "10.1.2.3";
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
+            var paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Content.Payment.Id);
 
-            paymentDetails.PaymentIp.ShouldBe(paymentRequest.PaymentIp);
+            paymentDetails.Content.PaymentIp.ShouldBe(paymentRequest.PaymentIp);
         }
 
         [Fact]
@@ -115,15 +115,15 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.Recipient =
                 new PaymentRecipient(new DateTime(1985, 05, 15), "4242424242", "W1T", lastName: "Wensle");
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
+            var paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Content.Payment.Id);
 
-            paymentDetails.Recipient.ShouldNotBeNull();
-            paymentDetails.Recipient.AccountNumber.ShouldBe(paymentRequest.Recipient.AccountNumber);
-            paymentDetails.Recipient.DateOfBirth.ShouldBe(paymentRequest.Recipient.DateOfBirth);
-            paymentDetails.Recipient.LastName.ShouldBe(paymentRequest.Recipient.LastName);
-            paymentDetails.Recipient.Zip.ShouldBe(paymentRequest.Recipient.Zip);
+            paymentDetails.Content.Recipient.ShouldNotBeNull();
+            paymentDetails.Content.Recipient.AccountNumber.ShouldBe(paymentRequest.Recipient.AccountNumber);
+            paymentDetails.Content.Recipient.DateOfBirth.ShouldBe(paymentRequest.Recipient.DateOfBirth);
+            paymentDetails.Content.Recipient.LastName.ShouldBe(paymentRequest.Recipient.LastName);
+            paymentDetails.Content.Recipient.Zip.ShouldBe(paymentRequest.Recipient.Zip);
         }
 
         [Fact]
@@ -135,20 +135,20 @@ namespace Checkout.Tests.Payments
                 Address = new Address() { AddressLine1 = "221B Baker Street", AddressLine2 = null, City = "London", Country = "UK", State = "n/a", Zip = "NW1 6XE" },
                 Phone = new Phone() { CountryCode = "44", Number = "124312431243" }
             };
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
+            var paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Content.Payment.Id);
 
-            paymentDetails.Shipping.ShouldNotBeNull();
-            paymentDetails.Shipping.Address.ShouldNotBeNull();
-            paymentDetails.Shipping.Address.AddressLine1.ShouldBe(paymentRequest.Shipping.Address.AddressLine1);
-            paymentDetails.Shipping.Address.AddressLine2.ShouldBe(paymentRequest.Shipping.Address.AddressLine2);
-            paymentDetails.Shipping.Address.City.ShouldBe(paymentRequest.Shipping.Address.City);
-            paymentDetails.Shipping.Address.Country.ShouldBe(paymentRequest.Shipping.Address.Country);
-            paymentDetails.Shipping.Address.State.ShouldBe(paymentRequest.Shipping.Address.State);
-            paymentDetails.Shipping.Address.Zip.ShouldBe(paymentRequest.Shipping.Address.Zip);
-            paymentDetails.Shipping.Phone.CountryCode.ShouldBe(paymentRequest.Shipping.Phone.CountryCode);
-            paymentDetails.Shipping.Phone.Number.ShouldBe(paymentRequest.Shipping.Phone.Number);
+            paymentDetails.Content.Shipping.ShouldNotBeNull();
+            paymentDetails.Content.Shipping.Address.ShouldNotBeNull();
+            paymentDetails.Content.Shipping.Address.AddressLine1.ShouldBe(paymentRequest.Shipping.Address.AddressLine1);
+            paymentDetails.Content.Shipping.Address.AddressLine2.ShouldBe(paymentRequest.Shipping.Address.AddressLine2);
+            paymentDetails.Content.Shipping.Address.City.ShouldBe(paymentRequest.Shipping.Address.City);
+            paymentDetails.Content.Shipping.Address.Country.ShouldBe(paymentRequest.Shipping.Address.Country);
+            paymentDetails.Content.Shipping.Address.State.ShouldBe(paymentRequest.Shipping.Address.State);
+            paymentDetails.Content.Shipping.Address.Zip.ShouldBe(paymentRequest.Shipping.Address.Zip);
+            paymentDetails.Content.Shipping.Phone.CountryCode.ShouldBe(paymentRequest.Shipping.Phone.CountryCode);
+            paymentDetails.Content.Shipping.Phone.Number.ShouldBe(paymentRequest.Shipping.Phone.Number);
         }
 
         [Fact]
@@ -156,26 +156,26 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             paymentRequest.Description = "Too descriptive";
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            GetPaymentResponse paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Payment.Id);
+            var paymentDetails = await _api.Payments.GetPaymentDetails(paymentResponse.Content.Payment.Id);
 
-            paymentDetails.Description.ShouldBe(paymentRequest.Description);
+            paymentDetails.Content.Description.ShouldBe(paymentRequest.Description);
         }
 
         [Fact]
         public async Task CanGetPaymentAction()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Payment.Id);
+            var actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Content.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
-            actionsResponse.ShouldHaveSingleItem();
+            actionsResponse.Content.ShouldHaveSingleItem();
 
-            PaymentProcessed payment = paymentResponse.Payment;
-            PaymentAction paymentAction = actionsResponse.SingleOrDefault();
+            PaymentProcessed payment = paymentResponse.Content.Payment;
+            PaymentAction paymentAction = actionsResponse.Content.SingleOrDefault();
             paymentAction.ShouldNotBeNull();
             paymentAction.Id.ShouldBe(payment.ActionId);
             paymentAction.ProcessedOn.ShouldBeGreaterThanOrEqualTo(payment.ProcessedOn);
@@ -196,25 +196,25 @@ namespace Checkout.Tests.Payments
         public async Task CanGetMultiplePaymentActions()
         {
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             var captureRequest = new CaptureRequest
             {
                 Reference = Guid.NewGuid().ToString()
             };
-            CaptureResponse captureResponse = await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id, captureRequest);
+            var captureResponse = await _api.Payments.CaptureAPayment(paymentResponse.Content.Payment.Id, captureRequest);
 
-            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Payment.Id);
+            var actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Content.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 
-            PaymentAction authorizationPaymentAction = actionsResponse.SingleOrDefault(a => a.Type == ActionType.Authorization);
+            PaymentAction authorizationPaymentAction = actionsResponse.Content.SingleOrDefault(a => a.Type == ActionType.Authorization);
             authorizationPaymentAction.ShouldNotBeNull();
-            authorizationPaymentAction.Id.ShouldBe(paymentResponse.Payment.ActionId);
+            authorizationPaymentAction.Id.ShouldBe(paymentResponse.Content.Payment.ActionId);
 
-            PaymentAction capturePaymentAction = actionsResponse.SingleOrDefault(a => a.Type == ActionType.Capture);
+            PaymentAction capturePaymentAction = actionsResponse.Content.SingleOrDefault(a => a.Type == ActionType.Capture);
             capturePaymentAction.ShouldNotBeNull();
-            capturePaymentAction.Id.ShouldBe(captureResponse.ActionId);
-            capturePaymentAction.Reference.ShouldBe(captureResponse.Reference);
+            capturePaymentAction.Id.ShouldBe(captureResponse.Content.ActionId);
+            capturePaymentAction.Reference.ShouldBe(captureResponse.Content.Reference);
             capturePaymentAction.Links.ShouldNotBeNull();
             capturePaymentAction.Processing.AcquirerReferenceNumber.ShouldNotBeNullOrWhiteSpace();
         }
@@ -225,13 +225,13 @@ namespace Checkout.Tests.Payments
             PaymentRequest<CardSource> paymentRequest = TestHelper.CreateCardPaymentRequest();
             var metadata = new KeyValuePair<string, object>("test", "1234");
             paymentRequest.Metadata.Add(metadata.Key, metadata.Value);
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            IEnumerable<PaymentAction> actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Payment.Id);
+            var actionsResponse = await _api.Payments.GetPaymentActions(paymentResponse.Content.Payment.Id);
 
             actionsResponse.ShouldNotBeNull();
 
-            PaymentAction paymentAction = actionsResponse.FirstOrDefault();
+            PaymentAction paymentAction = actionsResponse.Content.FirstOrDefault();
             paymentAction.ShouldNotBeNull();
             paymentAction.Metadata.ShouldNotBeNull();
             paymentAction.Metadata.ShouldNotBeEmpty();

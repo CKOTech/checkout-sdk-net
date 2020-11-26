@@ -23,7 +23,7 @@ namespace Checkout.Tests.Payments
             var paymentResponse2 = await Api.Payments.RequestAPayment(paymentRequest, idempotencyKey: idempotencyKey);
             paymentResponse2.ShouldNotBeNull();
 
-            paymentResponse2.Payment.Id.ShouldBe(paymentResponse1.Payment.Id);
+            paymentResponse2.Content.Payment.Id.ShouldBe(paymentResponse1.Content.Payment.Id);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Checkout.Tests.Payments
             var captureResponse2 = await Api.Payments.CaptureAPayment(payment.Id, captureRequest, idempotencyKey: idempotencyKey);
             captureResponse2.ShouldNotBeNull();
 
-            captureResponse2.ActionId.ShouldBe(captureResponse1.ActionId);
+            captureResponse2.Content.ActionId.ShouldBe(captureResponse1.Content.ActionId);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Checkout.Tests.Payments
             var voidResponse2 = await Api.Payments.VoidAPayment(payment.Id, voidRequest, idempotencyKey: idempotencyKey);
             voidResponse2.ShouldNotBeNull();
 
-            voidResponse2.ActionId.ShouldBe(voidResponse1.ActionId);
+            voidResponse2.Content.ActionId.ShouldBe(voidResponse1.Content.ActionId);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Checkout.Tests.Payments
             await Api.Payments.CaptureAPayment(payment.Id);
 
             var paymentResponse = await Api.Payments.GetPaymentDetails(payment.Id);
-            paymentResponse.Status.ShouldBe("Captured");
+            paymentResponse.Content.Status.ShouldBe("Captured");
 
             var refundRequest = new RefundRequest
             {
@@ -88,7 +88,7 @@ namespace Checkout.Tests.Payments
             var refundResponse2 = await Api.Payments.RefundAPayment(payment.Id, refundRequest, idempotencyKey: idempotencyKey);
             refundResponse2.ShouldNotBeNull();
 
-            refundResponse2.ActionId.ShouldBe(refundResponse1.ActionId);
+            refundResponse2.Content.ActionId.ShouldBe(refundResponse1.Content.ActionId);
         }
 
         async Task<PaymentProcessed> MakePaymentAsync(bool capture = true)
@@ -97,9 +97,9 @@ namespace Checkout.Tests.Payments
             paymentRequest.Capture = capture;
 
             var paymentResponse = await Api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.Payment.CanCapture().ShouldBeTrue();
+            paymentResponse.Content.Payment.CanCapture().ShouldBeTrue();
 
-            return paymentResponse.Payment;
+            return paymentResponse.Content.Payment;
         }
     }
 }

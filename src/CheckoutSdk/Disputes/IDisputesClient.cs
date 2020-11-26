@@ -1,5 +1,7 @@
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +20,7 @@ namespace Checkout.Disputes
         /// <param name="getDisputesRequest">The parameters for filtering the disputes request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the matching disputes.</returns>
-        Task<GetDisputesResponse> GetDisputes(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<GetDisputesResponse>> GetDisputes(GetDisputesRequest getDisputesRequest, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns all the details of a dispute using the dispute identifier.
@@ -26,7 +28,7 @@ namespace Checkout.Disputes
         /// <param name="disputeId">The dispute identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the matching dispute.</returns>
-        Task<Dispute> GetDisputeDetails(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<Dispute>> GetDisputeDetails(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
 
 
         /// <summary>
@@ -37,7 +39,7 @@ namespace Checkout.Disputes
         /// <param name="disputeId">The dispute identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A void task.</returns>
-        Task<HttpResponseMessage> AcceptDispute(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<dynamic>> AcceptDispute(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Adds supporting evidence to a dispute. Before using this endpoint, you first need to upload your files using the file uploader.
@@ -48,7 +50,7 @@ namespace Checkout.Disputes
         /// <param name="disputeEvidence">The dictionary that maps dispute evidence files and their description to evidence types.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A void task.</returns>
-        Task<HttpResponseMessage> ProvideDisputeEvidence(string disputeId, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<dynamic>> ProvideDisputeEvidence(string disputeId, DisputeEvidence disputeEvidence, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// With this final request, you can submit the evidence that you have previously provided.
@@ -58,7 +60,7 @@ namespace Checkout.Disputes
         /// <param name="disputeId">The dispute identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A void task.</returns>
-        Task<HttpResponseMessage> SubmitDisputeEvidence(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<dynamic>> SubmitDisputeEvidence(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Retrieves a list of the evidence submitted in response to a specific dispute.
@@ -66,6 +68,6 @@ namespace Checkout.Disputes
         /// <param name="disputeId">The dispute identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A void task.</returns>
-        Task<DisputeEvidenceResponse> GetDisputeEvidence(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<DisputeEvidenceResponse>> GetDisputeEvidence(string disputeId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

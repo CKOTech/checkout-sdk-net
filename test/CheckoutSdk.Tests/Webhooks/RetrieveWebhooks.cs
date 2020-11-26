@@ -11,8 +11,16 @@ namespace Checkout.Tests.Webhooks
         {
             var webhooksRetrievalResponse = await Api.Webhooks.RetrieveWebhooks();
 
-            webhooksRetrievalResponse.ShouldNotBeNull();
-            webhooksRetrievalResponse.Count.ShouldBeGreaterThan(0);
+            if(webhooksRetrievalResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                webhooksRetrievalResponse.Content.ShouldNotBeNull();
+                webhooksRetrievalResponse.Content.Count.ShouldBeGreaterThan(0);
+            }
+            else
+            {
+                webhooksRetrievalResponse.StatusCode.ShouldBe(System.Net.HttpStatusCode.NoContent);
+                webhooksRetrievalResponse.Content.ShouldBeNull();
+            }
         }
     }
 }

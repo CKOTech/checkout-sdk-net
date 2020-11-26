@@ -20,16 +20,16 @@ namespace Checkout.Tests.Webhooks
             webhook.Headers = null;
             webhook.EventTypes = null;
 
-            var webhookPartialUpdateResponse = await Api.Webhooks.PartiallyUpdateWebhook(webhookRegistrationResponse.Id, new PartialUpdateWebhookRequest(webhook));
+            var webhookPartialUpdateResponse = await Api.Webhooks.PartiallyUpdateWebhook(webhookRegistrationResponse.Content.Id, new PartialUpdateWebhookRequest(webhook));
 
             webhookPartialUpdateResponse.ShouldNotBeNull();
-            webhookPartialUpdateResponse.Id.ShouldBe(webhookRegistrationResponse.Id);
-            webhookPartialUpdateResponse.Url.ShouldEndWith("/partially/updated");
-            webhookPartialUpdateResponse.Active.ShouldBe(webhookRegistrationResponse.Active);
-            webhookPartialUpdateResponse.Headers.ShouldBe(webhookRegistrationResponse.Headers);
-            webhookPartialUpdateResponse.EventTypes.ShouldBe(webhookRegistrationResponse.EventTypes);
+            webhookPartialUpdateResponse.Content.Id.ShouldBe(webhookRegistrationResponse.Content.Id);
+            webhookPartialUpdateResponse.Content.Url.ShouldEndWith("/partially/updated");
+            webhookPartialUpdateResponse.Content.Active.ShouldBe(webhookRegistrationResponse.Content.Active);
+            webhookPartialUpdateResponse.Content.Headers.ShouldBe(webhookRegistrationResponse.Content.Headers);
+            webhookPartialUpdateResponse.Content.EventTypes.ShouldBe(webhookRegistrationResponse.Content.EventTypes);
 
-            await Api.Webhooks.RemoveWebhook(webhookPartialUpdateResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookPartialUpdateResponse.Content.Id);
         }
     }
 }

@@ -20,9 +20,9 @@ namespace Checkout.Tests.Payments
             };
 
             var captureResponse = await Api.Payments.CaptureAPayment(payment.Id, captureRequest);
-            captureResponse.ShouldNotBeNull();
-            captureResponse.ActionId.ShouldNotBeNullOrEmpty();
-            captureResponse.Reference.ShouldBe(captureRequest.Reference);
+            captureResponse.Content.ShouldNotBeNull();
+            captureResponse.Content.ActionId.ShouldNotBeNullOrEmpty();
+            captureResponse.Content.Reference.ShouldBe(captureRequest.Reference);
         }
 
         [Fact]
@@ -38,9 +38,9 @@ namespace Checkout.Tests.Payments
             };
 
             var captureResponse = await Api.Payments.CaptureAPayment(payment.Id, captureRequest);
-            captureResponse.ShouldNotBeNull();
-            captureResponse.ActionId.ShouldNotBeNullOrEmpty();
-            captureResponse.Reference.ShouldBe(captureRequest.Reference);
+            captureResponse.Content.ShouldNotBeNull();
+            captureResponse.Content.ActionId.ShouldNotBeNullOrEmpty();
+            captureResponse.Content.Reference.ShouldBe(captureRequest.Reference);
         }
 
         async Task<PaymentProcessed> MakePaymentAsync()
@@ -49,9 +49,9 @@ namespace Checkout.Tests.Payments
             paymentRequest.Capture = false;
 
             var paymentResponse = await Api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.Payment.CanCapture().ShouldBeTrue();
+            paymentResponse.Content.Payment.CanCapture().ShouldBeTrue();
 
-            return paymentResponse.Payment;
+            return paymentResponse.Content.Payment;
         }
     }
 }

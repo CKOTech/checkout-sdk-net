@@ -53,12 +53,12 @@ namespace Checkout.Tests.Payments
             
             PaymentPending payment = await RequestAlternativePaymentAsync(alternativePaymentSource);
 
-            GetPaymentResponse verifiedPayment = await _api.Payments.GetPaymentDetails(payment.Id);
+            var verifiedPayment = await _api.Payments.GetPaymentDetails(payment.Id);
 
-            verifiedPayment.ShouldNotBeNull();
-            verifiedPayment.Id.ShouldBe(payment.Id);
+            verifiedPayment.Content.ShouldNotBeNull();
+            verifiedPayment.Content.Id.ShouldBe(payment.Id);
 
-            var verifiedSource = verifiedPayment.Source.AsAlternativePayment();
+            var verifiedSource = verifiedPayment.Content.Source.AsAlternativePayment();
             foreach (string key in verifiedSource.Keys)
             {
                verifiedSource[key].ShouldBe(alternativePaymentSource[key]);
@@ -69,11 +69,11 @@ namespace Checkout.Tests.Payments
         {
             PaymentRequest<IRequestSource> paymentRequest = TestHelper.CreateAlternativePaymentMethodRequest(alternativePaymentSource, currency: Currency.EUR);
 
-            PaymentResponse apiResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            apiResponse.IsPending.ShouldBeTrue();
-            apiResponse.Pending.ShouldNotBeNull();
+            var apiResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            apiResponse.Content.IsPending.ShouldBeTrue();
+            apiResponse.Content.Pending.ShouldNotBeNull();
 
-            PaymentPending pendingPayment = apiResponse.Pending;
+            PaymentPending pendingPayment = apiResponse.Content.Pending;
             pendingPayment.Id.ShouldNotBeNullOrEmpty();
             pendingPayment.Status.ShouldBe(PaymentStatus.Pending);
             pendingPayment.Reference.ShouldBe(paymentRequest.Reference);

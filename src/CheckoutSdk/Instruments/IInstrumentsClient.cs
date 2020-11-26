@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +16,7 @@ namespace Checkout.Instruments
         /// <param name="instrumentRequest">The payment instrument details such as type and token.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the <see cref="CreateInstrumentResponse"/>.</returns>
-        Task<CreateInstrumentResponse> CreateAnInstrument(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<CreateInstrumentResponse>> CreateAnInstrument(InstrumentRequest instrumentRequest, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns details of a payment instrument.
@@ -22,7 +24,7 @@ namespace Checkout.Instruments
         /// <param name="instrumentId">The unique identifier of the payment instrument.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the <see cref="GetInstrumentResponse"/>.</returns>
-        Task<GetInstrumentResponse> GetInstrumentDetails(string instrumentId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<GetInstrumentResponse>> GetInstrumentDetails(string instrumentId, CancellationToken cancellationToken = default(CancellationToken));
 
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace Checkout.Instruments
         /// <param name="updateInstrumentRequest">The payment instrument details such as type and token.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the <see cref="UpdateInstrumentResponse"/>.</returns>
-        Task<UpdateInstrumentResponse> UpdateInstrumentDetails(string instrumentId, UpdateInstrumentRequest updateIstrumentRequest, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<UpdateInstrumentResponse>> UpdateInstrumentDetails(string instrumentId, UpdateInstrumentRequest updateIstrumentRequest, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

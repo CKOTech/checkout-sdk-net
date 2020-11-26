@@ -23,24 +23,24 @@ namespace Checkout.Tests
         {
             CardTokenRequest request = CreateValidRequest();
 
-            CardTokenResponse token = await _api.Tokens.RequestAToken(request);
+            var token = await _api.Tokens.RequestAToken(request);
 
-            token.ShouldNotBeNull();
-            token.Token.ShouldNotBeNullOrEmpty();
-            token.ExpiresOn.ShouldBeGreaterThan(DateTime.UtcNow);
-            token.BillingAddress.ShouldNotBeNull();
-            token.BillingAddress.AddressLine1.ShouldBe(request.BillingAddress.AddressLine1);
-            token.BillingAddress.AddressLine2.ShouldBe(request.BillingAddress.AddressLine2);
-            token.BillingAddress.City.ShouldBe(request.BillingAddress.City);
-            token.BillingAddress.State.ShouldBe(request.BillingAddress.State);
-            token.BillingAddress.Zip.ShouldBe(request.BillingAddress.Zip);
-            token.BillingAddress.Country.ShouldBe(request.BillingAddress.Country);
-            token.Phone.ShouldNotBeNull();
-            token.Phone.CountryCode.ShouldBe(request.Phone.CountryCode);
-            token.Phone.Number.ShouldBe(request.Phone.Number);
-            token.Type.ShouldBe("card");
-            token.ExpiryMonth.ShouldBe(request.ExpiryMonth);
-            token.ExpiryYear.ShouldBe(request.ExpiryYear);
+            token.Content.ShouldNotBeNull();
+            token.Content.Token.ShouldNotBeNullOrEmpty();
+            token.Content.ExpiresOn.ShouldBeGreaterThan(DateTime.UtcNow);
+            token.Content.BillingAddress.ShouldNotBeNull();
+            token.Content.BillingAddress.AddressLine1.ShouldBe(request.BillingAddress.AddressLine1);
+            token.Content.BillingAddress.AddressLine2.ShouldBe(request.BillingAddress.AddressLine2);
+            token.Content.BillingAddress.City.ShouldBe(request.BillingAddress.City);
+            token.Content.BillingAddress.State.ShouldBe(request.BillingAddress.State);
+            token.Content.BillingAddress.Zip.ShouldBe(request.BillingAddress.Zip);
+            token.Content.BillingAddress.Country.ShouldBe(request.BillingAddress.Country);
+            token.Content.Phone.ShouldNotBeNull();
+            token.Content.Phone.CountryCode.ShouldBe(request.Phone.CountryCode);
+            token.Content.Phone.Number.ShouldBe(request.Phone.Number);
+            token.Content.Type.ShouldBe("card");
+            token.Content.ExpiryMonth.ShouldBe(request.ExpiryMonth);
+            token.Content.ExpiryYear.ShouldBe(request.ExpiryYear);
         }
 
         private CardTokenRequest CreateValidRequest()

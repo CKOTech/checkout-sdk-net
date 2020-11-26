@@ -22,21 +22,21 @@ namespace Checkout.Tests.Payments
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
             var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
-            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
+            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Content.Token);
             paymentRequest.ThreeDS = false;
 
             var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            paymentResponse.Payment.ShouldNotBeNull();
-            paymentResponse.Payment.Approved.ShouldBeTrue();
-            paymentResponse.Payment.Id.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.ActionId.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.Amount.ShouldBe(paymentRequest.Amount.Value);
-            paymentResponse.Payment.Currency.ShouldBe(paymentRequest.Currency);
-            paymentResponse.Payment.Reference.ShouldBe(paymentRequest.Reference);
-            paymentResponse.Payment.CanCapture().ShouldBeTrue();
-            paymentResponse.Payment.CanVoid().ShouldBeTrue();
-            paymentResponse.Payment.Source.AsCard().ShouldNotBeNull();
+            paymentResponse.Content.Payment.ShouldNotBeNull();
+            paymentResponse.Content.Payment.Approved.ShouldBeTrue();
+            paymentResponse.Content.Payment.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.ActionId.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.Amount.ShouldBe(paymentRequest.Amount.Value);
+            paymentResponse.Content.Payment.Currency.ShouldBe(paymentRequest.Currency);
+            paymentResponse.Content.Payment.Reference.ShouldBe(paymentRequest.Reference);
+            paymentResponse.Content.Payment.CanCapture().ShouldBeTrue();
+            paymentResponse.Content.Payment.CanVoid().ShouldBeTrue();
+            paymentResponse.Content.Payment.Source.AsCard().ShouldNotBeNull();
         }
 
         [Fact]
@@ -44,12 +44,12 @@ namespace Checkout.Tests.Payments
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
             var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
-            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
+            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Content.Token);
             paymentRequest.ThreeDS = true;
             var apiResponse = await _api.Payments.RequestAPayment(paymentRequest);
 
-            apiResponse.IsPending.ShouldBe(true);
-            var pending = apiResponse.Pending;
+            apiResponse.Content.IsPending.ShouldBe(true);
+            var pending = apiResponse.Content.Pending;
 
             pending.ShouldNotBeNull();
 
@@ -67,19 +67,19 @@ namespace Checkout.Tests.Payments
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
             var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
-            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
+            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Content.Token);
             var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.Payment.CanCapture().ShouldBe(true);
+            paymentResponse.Content.Payment.CanCapture().ShouldBe(true);
 
             var captureRequest = new CaptureRequest
             {
                 Reference = Guid.NewGuid().ToString()
             };
 
-            var captureResponse = await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id, captureRequest);
+            var captureResponse = await _api.Payments.CaptureAPayment(paymentResponse.Content.Payment.Id, captureRequest);
 
-            captureResponse.ActionId.ShouldNotBeNullOrEmpty();
-            captureResponse.Reference.ShouldBe(captureRequest.Reference);
+            captureResponse.Content.ActionId.ShouldNotBeNullOrEmpty();
+            captureResponse.Content.Reference.ShouldBe(captureRequest.Reference);
         }
 
         [Fact]
@@ -87,17 +87,17 @@ namespace Checkout.Tests.Payments
         {
             var paymentRequest = TestHelper.CreateCardPaymentRequest();
             var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.Payment.CanVoid().ShouldBe(true);
+            paymentResponse.Content.Payment.CanVoid().ShouldBe(true);
 
             var voidRequest = new VoidRequest
             {
                 Reference = Guid.NewGuid().ToString()
             };
 
-            var voidResponse = await _api.Payments.VoidAPayment(paymentResponse.Payment.Id, voidRequest);
+            var voidResponse = await _api.Payments.VoidAPayment(paymentResponse.Content.Payment.Id, voidRequest);
 
-            voidResponse.ActionId.ShouldNotBeNullOrEmpty();
-            voidResponse.Reference.ShouldBe(voidRequest.Reference);
+            voidResponse.Content.ActionId.ShouldNotBeNullOrEmpty();
+            voidResponse.Content.Reference.ShouldBe(voidRequest.Reference);
         }
 
         [Fact]
@@ -105,21 +105,21 @@ namespace Checkout.Tests.Payments
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
             var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
-            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Token);
+            var paymentRequest = TestHelper.CreateTokenPaymentRequest(cardTokenResponse.Content.Token);
             var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.Payment.CanCapture().ShouldBe(true);
+            paymentResponse.Content.Payment.CanCapture().ShouldBe(true);
 
-            await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id);
+            await _api.Payments.CaptureAPayment(paymentResponse.Content.Payment.Id);
 
             var refundRequest = new RefundRequest
             {
                 Reference = Guid.NewGuid().ToString()
             };
 
-            var refundResponse = await _api.Payments.RefundAPayment(paymentResponse.Payment.Id, refundRequest);
+            var refundResponse = await _api.Payments.RefundAPayment(paymentResponse.Content.Payment.Id, refundRequest);
 
-            refundResponse.ActionId.ShouldNotBeNullOrEmpty();
-            refundResponse.Reference.ShouldBe(refundRequest.Reference);
+            refundResponse.Content.ActionId.ShouldNotBeNullOrEmpty();
+            refundResponse.Content.Reference.ShouldBe(refundRequest.Reference);
         }
     }
 }

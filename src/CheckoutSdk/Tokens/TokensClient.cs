@@ -1,4 +1,6 @@
 using System;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +22,7 @@ namespace Checkout.Tokens
             _credentials = new PublicKeyCredentials(configuration);
         }
 
-        public Task<CardTokenResponse> RequestAToken(CardTokenRequest cardTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<CardTokenResponse>> RequestAToken(CardTokenRequest cardTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (cardTokenRequest == null)
                 throw new ArgumentNullException(nameof(cardTokenRequest));
@@ -28,7 +30,7 @@ namespace Checkout.Tokens
             return _apiClient.PostAsync<CardTokenResponse>("tokens", _credentials, cancellationToken, cardTokenRequest);
         }
 
-        public Task<TokenResponse> RequestAToken(WalletTokenRequest walletTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<CheckoutHttpResponseMessage<TokenResponse>> RequestAToken(WalletTokenRequest walletTokenRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (walletTokenRequest == null)
                 throw new ArgumentNullException(nameof(walletTokenRequest));

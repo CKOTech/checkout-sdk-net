@@ -21,19 +21,19 @@ namespace Checkout.Tests.Instruments
         {
             var cardTokenRequest = TestHelper.CreateCardTokenRequest();
             var cardTokenResponse = await _api.Tokens.RequestAToken(cardTokenRequest);
-            var instrumentRequest = new InstrumentRequest("token", cardTokenResponse.Token);
+            var instrumentRequest = new InstrumentRequest("token", cardTokenResponse.Content.Token);
 
             var createInstrumentResponse = await _api.Instruments.CreateAnInstrument(instrumentRequest);
 
-            createInstrumentResponse.ShouldNotBeNull();
-            createInstrumentResponse.ExpiryMonth.ShouldBe(cardTokenRequest.ExpiryMonth);
-            createInstrumentResponse.ExpiryYear.ShouldBe(cardTokenRequest.ExpiryYear);
-            createInstrumentResponse.Last4.ShouldBe(cardTokenResponse.Last4);
+            createInstrumentResponse.Content.ShouldNotBeNull();
+            createInstrumentResponse.Content.ExpiryMonth.ShouldBe(cardTokenRequest.ExpiryMonth);
+            createInstrumentResponse.Content.ExpiryYear.ShouldBe(cardTokenRequest.ExpiryYear);
+            createInstrumentResponse.Content.Last4.ShouldBe(cardTokenResponse.Content.Last4);
 
-            var getInstrumentResponse = await _api.Instruments.GetInstrumentDetails(createInstrumentResponse.Id);
+            var getInstrumentResponse = await _api.Instruments.GetInstrumentDetails(createInstrumentResponse.Content.Id);
 
-            getInstrumentResponse.ShouldNotBeNull();
-            getInstrumentResponse.Id.ShouldBe(createInstrumentResponse.Id);
+            getInstrumentResponse.Content.ShouldNotBeNull();
+            getInstrumentResponse.Content.Id.ShouldBe(createInstrumentResponse.Content.Id);
         }
     }
 }

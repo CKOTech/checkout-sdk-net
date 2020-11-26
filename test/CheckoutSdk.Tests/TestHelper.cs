@@ -1,14 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Checkout.Common;
 using Checkout.Payments;
 using Checkout.Tokens;
 using Checkout.Webhooks;
+using Shouldly;
 
 namespace Checkout.Tests
 {
     public static class TestHelper
     {
+        public static string CkoRequestId = "bcfe03bd-2a8a-4340-8ce5-214761fae065";
+        public static string CkoVersion = "3.46.1";
+
+        public static void DueDiligenceTests<TContent>(CheckoutHttpResponseMessage<TContent> checkoutHttpResponseMessage)
+        {
+            checkoutHttpResponseMessage.ShouldNotBeNull();
+            checkoutHttpResponseMessage.CkoRequestId.ShouldNotBeNull();
+            checkoutHttpResponseMessage.CkoVersion.ShouldNotBeNull();
+        }
+
         public static PaymentRequest<CardSource> CreateCardPaymentRequest(long? amount = 100)
         {
             return new PaymentRequest<CardSource>(
@@ -25,6 +37,7 @@ namespace Checkout.Tests
                 Reference = Guid.NewGuid().ToString()
             };
         }
+        
         public static PaymentRequest<DlocalCardSource> CreateDlocalCardPaymentRequest(long? amount = 100)
         {
             var dlocalCardSource = new DlocalCardSource(TestCardSource.HiperCard.Number, TestCardSource.HiperCard.ExpiryMonth, TestCardSource.HiperCard.ExpiryYear, TestCardSource.HiperCard.Name)

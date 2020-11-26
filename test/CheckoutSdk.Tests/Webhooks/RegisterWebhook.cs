@@ -1,5 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
+using Checkout.Exceptions;
 using Checkout.Webhooks;
 using Shouldly;
 using Xunit;
@@ -16,11 +17,11 @@ namespace Checkout.Tests.Webhooks
             var webhookRegistrationResponse = await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook));
 
             webhookRegistrationResponse.ShouldNotBeNull();
-            webhookRegistrationResponse.Id.ShouldStartWith("wh_");
-            webhookRegistrationResponse.Url.ShouldBe(webhook.Url);
-            webhookRegistrationResponse.EventTypes.ShouldBe(webhook.EventTypes);
+            webhookRegistrationResponse.Content.Id.ShouldStartWith("wh_");
+            webhookRegistrationResponse.Content.Url.ShouldBe(webhook.Url);
+            webhookRegistrationResponse.Content.EventTypes.ShouldBe(webhook.EventTypes);
 
-            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookRegistrationResponse.Content.Id);
         }
 
         [Fact]
@@ -29,10 +30,10 @@ namespace Checkout.Tests.Webhooks
             var webhook = TestHelper.CreateWebhook();
             webhook.Url = "invalid";
 
-            var checkoutValidationException = Should.Throw<CheckoutValidationException>(async () => await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook)));
+            var checkoutValidationException = Should.Throw<Checkout422UnprocessableException>(async () => await Api.Webhooks.RegisterWebhook(new RegisterWebhookRequest(webhook)));
 
             checkoutValidationException.ShouldNotBeNull();
-            checkoutValidationException.HttpStatusCode.ShouldBe((HttpStatusCode)422);
+            checkoutValidationException.StatusCode.ShouldBe((HttpStatusCode)422);
             checkoutValidationException.Error.ErrorCodes.ShouldContain("url_invalid");
         }
     }

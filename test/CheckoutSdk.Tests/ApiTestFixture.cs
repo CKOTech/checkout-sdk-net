@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Moq;
 using Serilog;
 using System;
 using System.IO;
@@ -15,6 +16,7 @@ namespace Checkout.Tests
         public ApiTestFixture()
         {
             Api = new CheckoutApi(new ApiClient(Configuration), Configuration);
+            ApiMock = new Mock<ICheckoutApi>();
         }
 
         public void CaptureLogsInTestOutput(ITestOutputHelper outputHelper)
@@ -26,6 +28,7 @@ namespace Checkout.Tests
         }
 
         public ICheckoutApi Api { get; private set; }
+        public Mock<ICheckoutApi> ApiMock { get; private set; }
 
         private static CheckoutConfiguration LoadConfiguration()
         {

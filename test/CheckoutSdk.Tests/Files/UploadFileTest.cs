@@ -22,8 +22,8 @@ namespace Checkout.Tests.Files
             var pathToFile = @"test_file.png";
             var uploadFileResponse = await _api.Files.UploadFile(pathToFile: pathToFile, purpose: "dispute_evidence");
 
-            uploadFileResponse.ShouldNotBeNull();
-            uploadFileResponse.Id.ShouldStartWith("file_");
+            uploadFileResponse.Content.ShouldNotBeNull();
+            uploadFileResponse.Content.Id.ShouldStartWith("file_");
         }
 
         [Fact]

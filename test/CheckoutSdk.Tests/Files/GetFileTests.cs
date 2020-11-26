@@ -24,15 +24,15 @@ namespace Checkout.Tests.Files
             var fileInfo = new FileInfo(fileName: pathToFile);
             var uploadFileResponse = await _api.Files.UploadFile(pathToFile: fileInfo.FullName, purpose: "dispute_evidence");
 
-            uploadFileResponse.ShouldNotBeNull();
+            uploadFileResponse.Content.ShouldNotBeNull();
 
             // use returned fileID to try and get file details
-            var getFileResponse = await _api.Files.GetFileInformation(fileId: uploadFileResponse.Id);
+            var getFileResponse = await _api.Files.GetFileInformation(fileId: uploadFileResponse.Content.Id);
 
-            getFileResponse.ShouldNotBeNull();
-            getFileResponse.Id.ShouldBe(uploadFileResponse.Id);
-            getFileResponse.Filename.ShouldBe(fileInfo.Name);
-            getFileResponse.Size.ShouldBe((int)fileInfo.Length);
+            getFileResponse.Content.ShouldNotBeNull();
+            getFileResponse.Content.Id.ShouldBe(uploadFileResponse.Content.Id);
+            getFileResponse.Content.Filename.ShouldBe(fileInfo.Name);
+            getFileResponse.Content.Size.ShouldBe((int)fileInfo.Length);
         }
     }
 }

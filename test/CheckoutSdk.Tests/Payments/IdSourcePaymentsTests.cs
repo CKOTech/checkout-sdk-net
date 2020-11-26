@@ -22,7 +22,7 @@ namespace Checkout.Tests.Payments
         {
             var firstCardPayment = TestHelper.CreateCardPaymentRequest();
             var firstCardPaymentResponse = await _api.Payments.RequestAPayment(firstCardPayment);
-            var idSource = new IdSource(firstCardPaymentResponse.Payment.Source.AsCard().Id);
+            var idSource = new IdSource(firstCardPaymentResponse.Content.Payment.Source.AsCard().Id);
             var cardIdPaymentRequest = new PaymentRequest<IdSource>(
                 idSource,
                 Currency.GBP,
@@ -30,26 +30,26 @@ namespace Checkout.Tests.Payments
             )
             {
                 Capture = false,
-                Customer = ToRequest(firstCardPaymentResponse.Payment.Customer)
+                Customer = ToRequest(firstCardPaymentResponse.Content.Payment.Customer)
             };
 
-            PaymentResponse apiResponseForCustomerSourcePayment = await _api.Payments.RequestAPayment(cardIdPaymentRequest);
+            var apiResponseForCustomerSourcePayment = await _api.Payments.RequestAPayment(cardIdPaymentRequest);
 
-            apiResponseForCustomerSourcePayment.Payment.ShouldNotBeNull();
-            apiResponseForCustomerSourcePayment.Payment.Approved.ShouldBeTrue();
-            apiResponseForCustomerSourcePayment.Payment.Id.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Id.ShouldNotBe(firstCardPaymentResponse.Payment.Id);
-            apiResponseForCustomerSourcePayment.Payment.ActionId.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Amount.ShouldBe(cardIdPaymentRequest.Amount.Value);
-            apiResponseForCustomerSourcePayment.Payment.Currency.ShouldBe(cardIdPaymentRequest.Currency);
-            apiResponseForCustomerSourcePayment.Payment.Reference.ShouldBe(cardIdPaymentRequest.Reference);
-            apiResponseForCustomerSourcePayment.Payment.Customer.ShouldNotBeNull();
-            apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
-            apiResponseForCustomerSourcePayment.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Payment?.Customer?.Id);
-            apiResponseForCustomerSourcePayment.Payment.Source.AsCard().Id.ShouldBe(firstCardPaymentResponse.Payment?.Source?.AsCard().Id);
-            apiResponseForCustomerSourcePayment.Payment.CanCapture().ShouldBeTrue();
-            apiResponseForCustomerSourcePayment.Payment.CanVoid().ShouldBeTrue();
+            apiResponseForCustomerSourcePayment.Content.Payment.ShouldNotBeNull();
+            apiResponseForCustomerSourcePayment.Content.Payment.Approved.ShouldBeTrue();
+            apiResponseForCustomerSourcePayment.Content.Payment.Id.ShouldNotBeNullOrEmpty();
+            apiResponseForCustomerSourcePayment.Content.Payment.Id.ShouldNotBe(firstCardPaymentResponse.Content.Payment.Id);
+            apiResponseForCustomerSourcePayment.Content.Payment.ActionId.ShouldNotBeNullOrEmpty();
+            apiResponseForCustomerSourcePayment.Content.Payment.Amount.ShouldBe(cardIdPaymentRequest.Amount.Value);
+            apiResponseForCustomerSourcePayment.Content.Payment.Currency.ShouldBe(cardIdPaymentRequest.Currency);
+            apiResponseForCustomerSourcePayment.Content.Payment.Reference.ShouldBe(cardIdPaymentRequest.Reference);
+            apiResponseForCustomerSourcePayment.Content.Payment.Customer.ShouldNotBeNull();
+            apiResponseForCustomerSourcePayment.Content.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
+            apiResponseForCustomerSourcePayment.Content.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
+            apiResponseForCustomerSourcePayment.Content.Payment.Customer.Id.ShouldBe(firstCardPaymentResponse.Content.Payment?.Customer?.Id);
+            apiResponseForCustomerSourcePayment.Content.Payment.Source.AsCard().Id.ShouldBe(firstCardPaymentResponse.Content.Payment?.Source?.AsCard().Id);
+            apiResponseForCustomerSourcePayment.Content.Payment.CanCapture().ShouldBeTrue();
+            apiResponseForCustomerSourcePayment.Content.Payment.CanVoid().ShouldBeTrue();
         }
 
         private CustomerRequest ToRequest(CustomerResponse customer)

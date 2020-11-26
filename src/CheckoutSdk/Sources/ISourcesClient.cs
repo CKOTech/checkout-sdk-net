@@ -13,6 +13,6 @@ namespace Checkout.Sources
         /// </summary>
         /// <param name="sourceRequest">The source details such as type and billing address.</param>
         /// <returns>A task that upon completion contains the source response.</returns>
-        Task<SourceResponse> AddAPaymentSource(SourceRequest sourceRequest);
+        Task<CheckoutHttpResponseMessage<SourceResponse>> AddAPaymentSource(SourceRequest sourceRequest);
     }
 }

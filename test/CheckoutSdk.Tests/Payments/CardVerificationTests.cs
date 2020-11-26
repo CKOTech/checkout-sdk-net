@@ -13,7 +13,7 @@ namespace Checkout.Tests.Payments
             var paymentRequest = TestHelper.CreateCardPaymentRequest(amount: null);
             var paymentResponse = await Api.Payments.RequestAPayment(paymentRequest);
 
-            paymentResponse.Payment.Status.ShouldBe(PaymentStatus.CardVerified);
+            paymentResponse.Content.Payment.Status.ShouldBe(PaymentStatus.CardVerified);
         }
     }
 }

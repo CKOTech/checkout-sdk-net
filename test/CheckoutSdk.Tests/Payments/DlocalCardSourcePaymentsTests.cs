@@ -23,21 +23,21 @@ namespace Checkout.Tests.Payments
             var paymentRequest = TestHelper.CreateDlocalCardPaymentRequest();
             paymentRequest.ThreeDS = false;
 
-            PaymentResponse paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
+            var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
             
-            paymentResponse.Payment.ShouldNotBeNull();
-            paymentResponse.Payment.Approved.ShouldBeTrue();
-            paymentResponse.Payment.Id.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.ActionId.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.Amount.ShouldBe(paymentRequest.Amount.Value);
-            paymentResponse.Payment.Currency.ShouldBe(paymentRequest.Currency);
-            paymentResponse.Payment.Reference.ShouldBe(paymentRequest.Reference);
-            paymentResponse.Payment.Customer.ShouldNotBeNull();
-            paymentResponse.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
-            paymentResponse.Payment.CanCapture().ShouldBeTrue();
-            paymentResponse.Payment.CanVoid().ShouldBeTrue();
-            paymentResponse.Payment.Source.AsCard().ShouldNotBeNull();
+            paymentResponse.Content.Payment.ShouldNotBeNull();
+            paymentResponse.Content.Payment.Approved.ShouldBeTrue();
+            paymentResponse.Content.Payment.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.ActionId.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.Amount.ShouldBe(paymentRequest.Amount.Value);
+            paymentResponse.Content.Payment.Currency.ShouldBe(paymentRequest.Currency);
+            paymentResponse.Content.Payment.Reference.ShouldBe(paymentRequest.Reference);
+            paymentResponse.Content.Payment.Customer.ShouldNotBeNull();
+            paymentResponse.Content.Payment.Customer.Id.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.Customer.Email.ShouldNotBeNullOrEmpty();
+            paymentResponse.Content.Payment.CanCapture().ShouldBeTrue();
+            paymentResponse.Content.Payment.CanVoid().ShouldBeTrue();
+            paymentResponse.Content.Payment.Source.AsCard().ShouldNotBeNull();
 
             // ToDo : Why is this test expecting a returned processing object, should TPA's be returning it?
             // paymentResponse.Payment.Processing.ShouldNotBeNull();
@@ -52,7 +52,7 @@ namespace Checkout.Tests.Payments
             // Auth
             var paymentRequest = TestHelper.CreateDlocalCardPaymentRequest();
             var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.Payment.CanVoid().ShouldBe(true);
+            paymentResponse.Content.Payment.CanVoid().ShouldBe(true);
 
             VoidRequest voidRequest = new VoidRequest
             {
@@ -60,10 +60,10 @@ namespace Checkout.Tests.Payments
             };
 
             // Void Auth
-            var voidResponse = await _api.Payments.VoidAPayment(paymentResponse.Payment.Id, voidRequest);
+            var voidResponse = await _api.Payments.VoidAPayment(paymentResponse.Content.Payment.Id, voidRequest);
 
-            voidResponse.ActionId.ShouldNotBeNullOrEmpty();
-            voidResponse.Reference.ShouldBe(voidRequest.Reference);
+            voidResponse.Content.ActionId.ShouldNotBeNullOrEmpty();
+            voidResponse.Content.Reference.ShouldBe(voidRequest.Reference);
         }
 
         [Fact]
@@ -72,10 +72,10 @@ namespace Checkout.Tests.Payments
             // Auth
             var paymentRequest = TestHelper.CreateDlocalCardPaymentRequest();
             var paymentResponse = await _api.Payments.RequestAPayment(paymentRequest);
-            paymentResponse.Payment.CanCapture().ShouldBe(true);
+            paymentResponse.Content.Payment.CanCapture().ShouldBe(true);
 
             // Capture
-            await _api.Payments.CaptureAPayment(paymentResponse.Payment.Id);
+            await _api.Payments.CaptureAPayment(paymentResponse.Content.Payment.Id);
 
             var refundRequest = new RefundRequest
             {
@@ -84,10 +84,10 @@ namespace Checkout.Tests.Payments
 
             // Refund
 
-            var refundResponse = await _api.Payments.RefundAPayment(paymentResponse.Payment.Id, refundRequest);
+            var refundResponse = await _api.Payments.RefundAPayment(paymentResponse.Content.Payment.Id, refundRequest);
 
-            refundResponse.ActionId.ShouldNotBeNullOrEmpty();
-            refundResponse.Reference.ShouldBe(refundRequest.Reference);
+            refundResponse.Content.ActionId.ShouldNotBeNullOrEmpty();
+            refundResponse.Content.Reference.ShouldBe(refundRequest.Reference);
         }
     }
 }

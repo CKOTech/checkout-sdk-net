@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +17,7 @@ namespace Checkout.Files
         /// <param name="pathToFile">The path of the file to upload.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion returns the file upload response.</returns>
-        Task<UploadFileResponse> UploadFile(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<UploadFileResponse>> UploadFile(string pathToFile, string purpose, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns all the details of a file using the file identifier.
@@ -23,6 +25,6 @@ namespace Checkout.Files
         /// <param name="fileId">The file identifier string.</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the underlying HTTP request.</param>
         /// <returns>A task that upon completion contains the matching file.</returns>
-        Task<File> GetFileInformation(string fileId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<CheckoutHttpResponseMessage<File>> GetFileInformation(string fileId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

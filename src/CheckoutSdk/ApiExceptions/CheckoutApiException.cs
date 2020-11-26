@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Checkout
+namespace Checkout.Exceptions
 {
     /// <summary>
     /// Exception type for errors resulting from API operations.
@@ -10,26 +10,33 @@ namespace Checkout
         /// <summary>
         /// Creates a new <see cref="CheckoutApiException"/> instance.
         /// </summary>
-        /// <param name="httpStatusCode">The HTTP status code of the API response.</param>
-        /// <param name="requestId">The unique identifier of the API request.</param>
+        /// <param name="statusCode">The HTTP status code of the API response.</param>
+        /// <param name="ckoRequestId">The unique identifier of the API request.</param>
+        /// <param name="ckoVersion">The version of the API gateway.</param>
         /// <param name="additionalInformation">Additional details about the error.</param>
-        public CheckoutApiException(HttpStatusCode httpStatusCode, string requestId, string additionalInformation = null) 
-            : base(GenerateMessage(httpStatusCode, additionalInformation))
+        public CheckoutApiException(HttpStatusCode statusCode, string ckoRequestId, string ckoVersion, string additionalInformation = null) 
+            : base(GenerateMessage(statusCode, additionalInformation))
         {
-            HttpStatusCode = httpStatusCode;
-            RequestId = requestId;
+            StatusCode = statusCode;
+            CkoRequestId = ckoRequestId;
+            CkoVersion = ckoVersion;
         }
 
         /// <summary>
         /// Gets the HTTP status code of the API response.
         /// </summary>
         /// <value></value>
-        public HttpStatusCode HttpStatusCode { get; }
+        public HttpStatusCode StatusCode { get; }
         
         /// <summary>
         /// Gets the unique identifier of the API request.
         /// </summary>
-        public string RequestId { get; }
+        public string CkoRequestId { get; }
+
+        /// <summary>
+        /// Gets the version of the API gateway.
+        /// </summary>
+        public string CkoVersion { get; }
 
         private static string GenerateMessage(HttpStatusCode httpStatusCode, string additionalInformation = null)
         {

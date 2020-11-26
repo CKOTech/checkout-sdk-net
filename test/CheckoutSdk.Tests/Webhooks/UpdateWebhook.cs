@@ -17,24 +17,24 @@ namespace Checkout.Tests.Webhooks
 
             webhookRegistrationResponse.ShouldNotBeNull();
 
-            webhookRegistrationResponse.Headers.TryGetValue("authorization", out string authorization);
+            webhookRegistrationResponse.Content.Headers.TryGetValue("authorization", out string authorization);
             webhook.Url += "/updated";
-            webhook.Active = !webhookRegistrationResponse.Active;
+            webhook.Active = !webhookRegistrationResponse.Content.Active;
             webhook.EventTypes = new List<string>
             {
                 "payment_refunded"
             };
             webhook.Headers.Add("Authorization", authorization);
 
-            var webhookUpdateResponse = await Api.Webhooks.UpdateWebhook(webhookRegistrationResponse.Id, new UpdateWebhookRequest(webhook));
+            var webhookUpdateResponse = await Api.Webhooks.UpdateWebhook(webhookRegistrationResponse.Content.Id, new UpdateWebhookRequest(webhook));
 
             webhookUpdateResponse.ShouldNotBeNull();
-            webhookUpdateResponse.Id.ShouldBe(webhookRegistrationResponse.Id);
-            webhookUpdateResponse.Url.ShouldEndWith("/updated");
-            webhookUpdateResponse.Active.ShouldNotBe(webhookRegistrationResponse.Active);
-            webhookUpdateResponse.EventTypes.ShouldBe(webhook.EventTypes);
+            webhookUpdateResponse.Content.Id.ShouldBe(webhookRegistrationResponse.Content.Id);
+            webhookUpdateResponse.Content.Url.ShouldEndWith("/updated");
+            webhookUpdateResponse.Content.Active.ShouldNotBe(webhookRegistrationResponse.Content.Active);
+            webhookUpdateResponse.Content.EventTypes.ShouldBe(webhook.EventTypes);
 
-            await Api.Webhooks.RemoveWebhook(webhookUpdateResponse.Id);
+            await Api.Webhooks.RemoveWebhook(webhookUpdateResponse.Content.Id);
         }
     }
 }
